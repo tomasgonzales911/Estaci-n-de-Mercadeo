@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Estación de Planificación de Mercadeo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D1016;
+    --ink-2:#141A22;
+    --panel:#F3ECDE;
+    --panel-line:#E0D5BE;
+    --parchment-ink:#23201A;
+    --brass:#C98A37;
+    --brass-soft:#E0B978;
+    --oxblood:#8E3B36;
+    --slate:#8A93A0;
+    --slate-d:#5A636F;
+    --field:#FBF7EE;
+    --field-line:#D8CCB2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:#EFE9DC;
+    font-family:'Archivo',system-ui,sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 22px;}
+
+  header{
+    position:relative;
+    padding:54px 0 40px;
+    overflow:hidden;
+    border-bottom:1px solid #232a33;
+  }
+  .coords-bg{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(to right, rgba(201,138,55,.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(201,138,55,.07) 1px, transparent 1px);
+    background-size:46px 46px;
+    mask-image:radial-gradient(ellipse 80% 70% at 50% 30%, #000 30%, transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 30%, #000 30%, transparent 75%);
+    pointer-events:none;
+  }
+  .epigraph{
+    position:relative;
+    font-family:'Fraunces';
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(18px,4.4vw,23px);
+    color:var(--brass-soft);
+    margin:0 0 30px;
+    padding-left:16px;
+    border-left:2px solid var(--brass);
+    line-height:1.3;
+  }
+  .eyebrow{
+    font-family:'Archivo Narrow';
+    text-transform:uppercase;
+    letter-spacing:.32em;
+    font-size:12px;
+    color:var(--brass);
+    margin:0 0 16px;
+    position:relative;
+  }
+  h1{
+    font-family:'Fraunces';
+    font-weight:900;
+    font-size:clamp(34px,7.4vw,60px);
+    line-height:.96;
+    letter-spacing:-.02em;
+    margin:0;
+    position:relative;
+    color:#FBF6EC;
+  }
+  h1 em{font-style:italic;font-weight:500;color:var(--brass-soft);}
+  .lede{
+    position:relative;
+    margin:22px 0 0;
+    max-width:50ch;
+    color:#C7CCD3;
+    font-size:16.5px;
+  }
+  .compass{
+    position:relative;
+    display:flex;
+    gap:8px;
+    margin-top:26px;
+    flex-wrap:wrap;
+  }
+  .compass span{
+    font-family:'Archivo Narrow';
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:12.5px;
+    color:#A9B0B9;
+    border:1px solid #2c3540;
+    border-radius:100px;
+    padding:6px 14px;
+  }
+  .compass span b{color:var(--brass-soft);font-weight:600;}
+
+  .who{
+    display:flex;gap:14px;flex-wrap:wrap;
+    padding:26px 0 6px;
+  }
+  .who .field{flex:1;min-width:200px;}
+
+  main{padding:14px 0 40px;}
+  .coord{
+    margin:34px 0;
+    background:var(--panel);
+    color:var(--parchment-ink);
+    border-radius:4px;
+    border:1px solid var(--panel-line);
+    box-shadow:0 24px 60px -34px rgba(0,0,0,.8);
+    overflow:hidden;
+  }
+  .coord-head{
+    padding:26px 30px 20px;
+    border-bottom:1px solid var(--panel-line);
+    position:relative;
+  }
+  .coord-head::before{
+    content:attr(data-mark);
+    position:absolute;top:22px;right:26px;
+    font-family:'Fraunces';font-weight:900;font-size:54px;
+    color:rgba(142,59,54,.13);line-height:1;
+  }
+  .coord-kicker{
+    font-family:'Archivo Narrow';text-transform:uppercase;
+    letter-spacing:.22em;font-size:11.5px;color:var(--oxblood);
+    margin:0 0 6px;
+  }
+  .coord-title{
+    font-family:'Fraunces';font-weight:600;font-size:30px;
+    margin:0;letter-spacing:-.01em;
+  }
+  .coord-sub{margin:8px 0 0;color:#6a6256;font-size:14.5px;max-width:52ch;}
+  .coord-body{padding:8px 30px 28px;}
+
+  .q{margin-top:22px;}
+  .q label{
+    display:block;
+    font-size:15.5px;
+    font-weight:600;
+    color:#322d24;
+    margin-bottom:9px;
+  }
+  .q label .n{
+    font-family:'Archivo Narrow';
+    color:var(--brass);
+    margin-right:9px;
+    font-weight:600;
+  }
+  textarea, input[type=text]{
+    width:100%;
+    font-family:'Archivo',sans-serif;
+    font-size:15px;
+    color:var(--parchment-ink);
+    background:var(--field);
+    border:1px solid var(--field-line);
+    border-radius:3px;
+    padding:11px 13px;
+    resize:vertical;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  textarea{min-height:64px;line-height:1.5;}
+  textarea:focus, input[type=text]:focus{
+    outline:none;
+    border-color:var(--brass);
+    box-shadow:0 0 0 3px rgba(201,138,55,.16);
+  }
+  .who label{
+    display:block;font-family:'Archivo Narrow';text-transform:uppercase;
+    letter-spacing:.16em;font-size:11px;color:var(--slate);margin-bottom:7px;
+  }
+  .who input{background:var(--ink-2);border:1px solid #2a323c;color:#EFE9DC;}
+  .who input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,138,55,.14);}
+
+  .action{padding:8px 0 24px;text-align:center;}
+  .btn{
+    font-family:'Archivo',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    letter-spacing:.01em;
+    color:#1a130a;
+    background:linear-gradient(180deg,var(--brass-soft),var(--brass));
+    border:none;
+    border-radius:4px;
+    padding:16px 38px;
+    cursor:pointer;
+    transition:transform .12s, filter .2s;
+    box-shadow:0 14px 36px -14px rgba(201,138,55,.7);
+  }
+  .btn:hover{transform:translateY(-1px);filter:brightness(1.04);}
+  .btn:active{transform:translateY(0);}
+  .hint{margin:16px 0 0;font-size:13px;color:var(--slate-d);max-width:46ch;margin-left:auto;margin-right:auto;}
+  .ok{
+    margin:18px auto 0;max-width:48ch;
+    background:#13201a;border:1px solid #28503f;color:#bfe6cf;
+    padding:14px 18px;border-radius:4px;font-size:14.5px;display:none;
+  }
+  .ok.on{display:block;animation:rise .4s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .fallback{
+    margin:16px 0 0;display:none;
+  }
+  .fallback.on{display:block;}
+  .fallback textarea{min-height:140px;background:var(--ink-2);border-color:#2a323c;color:#EFE9DC;font-size:13px;}
+
+  footer{border-top:1px solid #1f262e;padding:26px 0 40px;text-align:center;}
+  footer p{font-family:'Archivo Narrow';text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:var(--slate-d);margin:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="coords-bg"></div>
+  <div class="wrap">
+    <p class="epigraph">"Está perdido el que no sabe dónde ir."</p>
+    <p class="eyebrow">Mapa de coordenadas</p>
+    <h1>La <em>Estación</em><br>de Planificación de Mercadeo</h1>
+    <p class="lede">Respondé con honestidad y sin apurarte — no hay respuestas correctas, hay coordenadas. Cuando termines, copiá tus respuestas y enviáselas a quien te compartió esta página: a partir de acá trazamos juntos el mapa.</p>
+    <div class="compass">
+      <span><b>Destino</b> · adónde vas</span>
+      <span><b>Esencia</b> · quién sos</span>
+      <span><b>Ambiente</b> · qué falta</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="who">
+    <div class="field">
+      <label for="name">Nombre / artista</label>
+      <input type="text" id="name" placeholder="Cómo te presentás">
+    </div>
+    <div class="field">
+      <label for="role">Rol</label>
+      <input type="text" id="role" placeholder="Productor, beatmaker, artista…">
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section class="coord">
+    <div class="coord-head" data-mark="01">
+      <p class="coord-kicker">Coordenada 1 — la brújula</p>
+      <h2 class="coord-title">El destino</h2>
+      <p class="coord-sub">Adónde querés llegar. Todo lo demás se mide contra esto.</p>
+    </div>
+    <div class="coord-body">
+      <div class="q"><label><span class="n">01</span>¿Cuál es el resultado que querés con tu carrera, y en cuánto tiempo? Contámelo como si ya estuviera pasando.</label><textarea data-q="¿Cuál es el resultado que querés con tu carrera, y en cuánto tiempo? (como si ya estuviera pasando)"></textarea></div>
+      <div class="q"><label><span class="n">02</span>¿Cómo es el artista soñado con el que querés trabajar? ¿Qué lo hace distinto — su talento, sus valores, su manera de ser?</label><textarea data-q="¿Cómo es el artista soñado con el que querés trabajar? ¿Qué lo hace distinto?"></textarea></div>
+      <div class="q"><label><span class="n">03</span>¿Qué significa "ganar" para vos, más allá de la plata?</label><textarea data-q="¿Qué significa ganar para vos, más allá de la plata?"></textarea></div>
+      <div class="q"><label><span class="n">04</span>¿Qué nivel querés poder cobrar, y a quién?</label><textarea data-q="¿Qué nivel querés poder cobrar, y a quién?"></textarea></div>
+      <div class="q"><label><span class="n">05</span>¿Qué creés que venían buscando los artistas con los que ya trabajaste, más allá de "un beat"? ¿Y qué miedos creés que traían?</label><textarea data-q="¿Qué creés que venían buscando los artistas con los que ya trabajaste, más allá de un beat? ¿Y qué miedos creés que traían?"></textarea></div>
+      <div class="q"><label><span class="n">06</span>Tu cliente soñado: ¿qué es lo que más creés que desea — eso que capaz no se anima a decir? ¿Y qué es lo que más creés que teme?</label><textarea data-q="Tu cliente soñado: ¿qué es lo que más creés que desea? ¿Y qué es lo que más creés que teme?"></textarea></div>
+    </div>
+  </section>
+
+  <section class="coord">
+    <div class="coord-head" data-mark="02">
+      <p class="coord-kicker">Coordenada 2 — desde dónde partís</p>
+      <h2 class="coord-title">Tu esencia</h2>
+      <p class="coord-sub">Quién sos entero: persona, artista, creador. El diferencial vive acá, y no siempre está en la música.</p>
+    </div>
+    <div class="coord-body">
+      <div class="q"><label><span class="n">07</span>¿Quién sos cuando no estás produciendo? ¿Qué te mueve, qué te enoja, qué defendés?</label><textarea data-q="¿Quién sos cuando no estás produciendo? ¿Qué te mueve, qué te enoja, qué defendés?"></textarea></div>
+      <div class="q"><label><span class="n">08</span>La gente que te conoce de verdad, ¿qué dice que sos vos que nadie más es?</label><textarea data-q="La gente que te conoce de verdad, ¿qué dice que sos vos que nadie más es?"></textarea></div>
+      <div class="q"><label><span class="n">09</span>¿Qué hacés mejor que la mayoría — en la música y en la vida? (cómo escuchás, cómo acompañás, cómo ves a la gente, cómo creás)</label><textarea data-q="¿Qué hacés mejor que la mayoría, en la música y en la vida?"></textarea></div>
+      <div class="q"><label><span class="n">10</span>¿De qué estás más orgulloso de lo que construiste, como artista y como persona?</label><textarea data-q="¿De qué estás más orgulloso de lo que construiste, como artista y como persona?"></textarea></div>
+      <div class="q"><label><span class="n">11</span>De todo lo que te formó — familia, cultura, lo que te exigieron, las heridas — ¿qué elegís llevar con vos y qué dejás en la orilla?</label><textarea data-q="De todo lo que te formó (familia, cultura, lo que te exigieron, las heridas), ¿qué elegís llevar con vos y qué dejás en la orilla?"></textarea></div>
+      <div class="q"><label><span class="n">12</span>¿Qué creés que es lo que más te frena hoy — eso que, si no te frenara, ya estarías donde querés entrar?</label><textarea data-q="¿Qué creés que es lo que más te frena hoy, eso que si no te frenara ya estarías donde querés entrar?"></textarea></div>
+    </div>
+  </section>
+
+  <section class="coord">
+    <div class="coord-head" data-mark="03">
+      <p class="coord-kicker">Coordenada 3 — el campo</p>
+      <h2 class="coord-title">El ambiente</h2>
+      <p class="coord-sub">El mundo donde te movés y, sobre todo, el hueco: lo que falta y nadie está ocupando.</p>
+    </div>
+    <div class="coord-body">
+      <div class="q"><label><span class="n">13</span>¿En qué escena o nicho dirías que estás hoy? Ponele nombre, aunque sea uno tuyo.</label><textarea data-q="¿En qué escena o nicho dirías que estás hoy? (ponele nombre, aunque sea uno tuyo)"></textarea></div>
+      <div class="q"><label><span class="n">14</span>¿Dónde vive y qué consume la gente que ya te sigue o te contrata? (qué escuchan, a quién siguen, en qué plataformas están)</label><textarea data-q="¿Dónde vive y qué consume la gente que ya te sigue o te contrata? (qué escuchan, a quién siguen, en qué plataformas están)"></textarea></div>
+      <div class="q"><label><span class="n">15</span>¿Con qué mundo o tipo de gente te gustaría que se asocie tu nombre?</label><textarea data-q="¿Con qué mundo o tipo de gente te gustaría que se asocie tu nombre?"></textarea></div>
+      <div class="q"><label><span class="n">16</span>¿Qué otros artistas o referentes se mueven en ese mismo espacio que vos?</label><textarea data-q="¿Qué otros artistas o referentes se mueven en ese mismo espacio que vos?"></textarea></div>
+      <div class="q"><label><span class="n">17</span>¿Qué te aburre, te molesta o te suena falso de lo que hoy se hace en tu ambiente?</label><textarea data-q="¿Qué te aburre, te molesta o te suena falso de lo que hoy se hace en tu ambiente?"></textarea></div>
+      <div class="q"><label><span class="n">18</span>¿Qué sentís que nadie está diciendo ni haciendo, y vos sí podrías?</label><textarea data-q="¿Qué sentís que nadie está diciendo ni haciendo, y vos sí podrías?"></textarea></div>
+      <div class="q"><label><span class="n">19</span>¿Quiénes ocupan hoy el lugar al que apuntás? ¿Qué les falta?</label><textarea data-q="¿Quiénes ocupan hoy el lugar al que apuntás? ¿Qué les falta?"></textarea></div>
+      <div class="q"><label><span class="n">20</span>Si pudieras romper una sola regla de la industria, ¿cuál sería?</label><textarea data-q="Si pudieras romper una sola regla de la industria, ¿cuál sería?"></textarea></div>
+    </div>
+  </section>
+
+  <div class="action">
+    <button class="btn" id="go">Copiar mis respuestas</button>
+    <p class="hint">Se copian al portapapeles. Pegáselas a quien te compartió esta página para empezar a trazar el mapa.</p>
+    <div class="ok" id="ok"></div>
+    <div class="fallback" id="fallback">
+      <textarea id="fallbackText" readonly></textarea>
+    </div>
+  </div>
+
+</main>
+
+<footer><div class="wrap"><p>La Estación de Planificación de Mercadeo</p></div></footer>
+
+<script>
+const btn = document.getElementById('go');
+const ok = document.getElementById('ok');
+const fb = document.getElementById('fallback');
+const fbText = document.getElementById('fallbackText');
+
+function buildText(){
+  const name = (document.getElementById('name').value.trim() || 'Sin nombre');
+  const role = (document.getElementById('role').value.trim() || 'Sin rol');
+  let out = ['LA ESTACIÓN DE PLANIFICACIÓN DE MERCADEO','Respuestas de: ' + name + ' — ' + role,''];
+  document.querySelectorAll('section.coord').forEach(sec=>{
+    const title = sec.querySelector('.coord-title').textContent.trim().toUpperCase();
+    let block = [];
+    sec.querySelectorAll('textarea[data-q]').forEach(t=>{
+      const v = t.value.trim();
+      if(v){ block.push('• ' + t.dataset.q); block.push('  ' + v); block.push(''); }
+    });
+    if(block.length){ out.push('— ' + title + ' —'); out = out.concat(block); }
+  });
+  out.push('—');
+  out.push('Enviado desde La Estación de Planificación de Mercadeo.');
+  return out.join('\n');
+}
+
+function countAnswered(){
+  let n=0;
+  document.querySelectorAll('textarea[data-q]').forEach(t=>{ if(t.value.trim()) n++; });
+  return n;
+}
+
+async function copyAnswers(){
+  ok.className='ok'; fb.className='fallback';
+  if(countAnswered() < 1){
+    ok.textContent = 'Todavía no respondiste nada. Completá al menos una pregunta antes de copiar.';
+    ok.className='ok on';
+    return;
+  }
+  const text = buildText();
+  let copied = false;
+  try{
+    await navigator.clipboard.writeText(text);
+    copied = true;
+  }catch(e){
+    try{
+      fbText.value = text;
+      fb.className='fallback on';
+      fbText.focus(); fbText.select();
+      copied = document.execCommand('copy');
+    }catch(e2){ copied = false; }
+  }
+  if(copied){
+    ok.textContent = '✓ Listo, copiado. Pegáselas a quien te compartió esta página.';
+    ok.className='ok on';
+    fb.className='fallback';
+  }else{
+    fbText.value = text;
+    fb.className='fallback on';
+    fbText.focus(); fbText.select();
+    ok.textContent = 'Copialas a mano desde el recuadro de abajo (seleccioná todo y copiá) y enviáselas.';
+    ok.className='ok on';
+  }
+}
+btn.addEventListener('click', copyAnswers);
+</script>
+</body>
+</html>
